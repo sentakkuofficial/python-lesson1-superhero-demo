@@ -127,17 +127,26 @@ function setInputEnabled(enabled) {
 }
 
 function showStartScreen() {
+
   step = -1;
   city = "";
   animal = "";
   isAnimating = false;
 
   consoleEl.innerHTML = "";
-  addLine("Click the Run button below to run the final project you will build.", "brand");
+
+  const line = document.createElement("div");
+  line.className = "console-line brand";
+
+  line.innerHTML =
+    'Click <span id="runLink" class="run-link">RUN</span> to run the final project you will build.';
+
+  consoleEl.appendChild(line);
 
   inputArea.style.display = "none";
-  setInputEnabled(false);
   userInput.value = "";
+
+  document.getElementById("runLink").addEventListener("click", startProgram);
 }
 
 async function startProgram() {
