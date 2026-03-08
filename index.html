@@ -7,37 +7,56 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="page">
-    <h1>Python Day 1 Demo</h1>
-    <p class="subtitle">Superhero Name Generator</p>
+  <div class="background-grid"></div>
 
-    <div class="console-container">
-      <div class="console-header">
-        <span class="dot red"></span>
-        <span class="dot yellow"></span>
-        <span class="dot green"></span>
-        <span class="console-title">main.py</span>
+  <main class="app-shell">
+    <section class="hero">
+      <p class="eyebrow">DAY 1 DEMO</p>
+      <h1>Superhero Name Generator</h1>
+      <p class="hero-text">
+        Try the finished project first, then build it yourself.
+      </p>
+    </section>
+
+    <section class="terminal-card">
+      <div class="terminal-topbar">
+        <div class="traffic-lights">
+          <span class="light red"></span>
+          <span class="light yellow"></span>
+          <span class="light green"></span>
+        </div>
+        <div class="terminal-meta">
+          <span class="file-name">main.py</span>
+          <span class="status-pill">Python Demo</span>
+        </div>
       </div>
 
-      <div id="console" class="console"></div>
+      <div class="terminal-body">
+        <aside class="line-numbers" id="lineNumbers"></aside>
 
-      <div class="input-row">
-        <span class="prompt">&gt;&gt;&gt;</span>
-        <input
-          id="userInput"
-          type="text"
-          autocomplete="off"
-          placeholder="Type your answer here..."
-        />
-        <button id="submitBtn">Enter</button>
+        <div class="terminal-main">
+          <div id="console" class="console-output"></div>
+
+          <div class="terminal-input-bar">
+            <span class="prompt-symbol">❯</span>
+            <input
+              id="userInput"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Type your answer and press Enter..."
+            />
+            <button id="submitBtn">Enter</button>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="buttons">
-      <button id="runBtn">Run</button>
-      <button id="resetBtn">Reset</button>
+    <div class="action-row">
+      <button id="runBtn" class="primary-btn">Run Demo</button>
+      <button id="resetBtn" class="secondary-btn">Reset</button>
     </div>
-  </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
