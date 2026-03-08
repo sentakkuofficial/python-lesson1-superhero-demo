@@ -25,6 +25,20 @@ html, body {
   min-height: 100%;
 }
 
+.run-link {
+  color: #d4af37;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: all 0.25s ease;
+}
+
+.run-link:hover {
+  background: rgba(212,175,55,0.15);
+  box-shadow: 0 0 10px rgba(212,175,55,0.4);
+  color: #f7e08c;
+}
 body {
   position: relative;
   background:
