@@ -237,47 +237,43 @@ userInput.addEventListener("keydown", (event) => {
   }
 });
 
-if (resetBtn) {
-  resetBtn.addEventListener("click", () => {
-    showStartScreen();
-  });
-}
+resetBtn.addEventListener("click", () => {
+  showStartScreen();
+});
 
-if (soundBtn) {
-  soundBtn.addEventListener("click", async () => {
-    soundOn = !soundOn;
+soundBtn.addEventListener("click", async () => {
+  soundOn = !soundOn;
 
-    ensureAudio();
+  ensureAudio();
 
-    if (audioCtx && audioCtx.state === "suspended") {
-      try {
-        await audioCtx.resume();
-      } catch (error) {
-        console.error("Audio resume failed:", error);
-      }
+  if (audioCtx && audioCtx.state === "suspended") {
+    try {
+      await audioCtx.resume();
+    } catch (error) {
+      console.error("Audio resume failed:", error);
     }
+  }
 
-    soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
+  soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
 
-    if (soundOn) {
+  if (soundOn) {
+    beep({
+      frequency: 880,
+      duration: 0.05,
+      volume: 0.02,
+      type: "sine"
+    });
+
+    setTimeout(() => {
       beep({
-        frequency: 880,
+        frequency: 1200,
         duration: 0.05,
-        volume: 0.02,
+        volume: 0.018,
         type: "sine"
       });
-
-      setTimeout(() => {
-        beep({
-          frequency: 1200,
-          duration: 0.05,
-          volume: 0.018,
-          type: "sine"
-        });
-      }, 70);
-    }
-  });
-}
+    }, 70);
+  }
+});
 
 renderLineNumbers();
 showStartScreen();
