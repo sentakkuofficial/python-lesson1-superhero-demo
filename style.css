@@ -29,15 +29,15 @@ html, body {
   color: #d4af37;
   font-weight: 700;
   cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 6px;
+  padding: 2px 8px;
+  border-radius: 8px;
   transition: all 0.25s ease;
 }
 
 .run-link:hover {
-  background: rgba(212,175,55,0.15);
-  box-shadow: 0 0 10px rgba(212,175,55,0.4);
-  color: #f7e08c;
+  background: rgba(212, 175, 55, 0.14);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+  color: #f6dea0;
 }
 body {
   position: relative;
