@@ -123,36 +123,35 @@ async function typeLine(text, className = "muted", prefix = "", speed = 18) {
 function setInputEnabled(enabled) {
   userInput.disabled = !enabled;
   submitBtn.disabled = !enabled;
-  if (enabled) {
-    userInput.focus();
-  }
+  if (enabled) userInput.focus();
 }
 
 function showStartScreen() {
-  isAnimating = false;
   step = -1;
   city = "";
   animal = "";
+  isAnimating = false;
 
   consoleEl.innerHTML = "";
-  addLine("Click RUN to run the final project you will build.", "brand");
+  addLine("Click the Run button below to run the final project you will build.", "brand");
 
   inputArea.style.display = "none";
-  userInput.value = "";
   setInputEnabled(false);
+  userInput.value = "";
 }
 
 async function startProgram() {
   if (isAnimating) return;
 
-  isAnimating = true;
   step = 0;
   city = "";
   animal = "";
+  isAnimating = true;
 
   consoleEl.innerHTML = "";
   inputArea.style.display = "block";
   setInputEnabled(false);
+  userInput.value = "";
 
   await typeLine("Welcome to the Superhero Name Generator.", "brand", "", 18);
   await typeLine("What's the name of the city you grew up in?", "question", "", 16);
@@ -178,7 +177,6 @@ async function finishProgram() {
 
 async function handleInput() {
   const value = userInput.value.trim();
-
   if (!value || userInput.disabled || isAnimating) return;
 
   addUserLine(value);
@@ -187,7 +185,6 @@ async function handleInput() {
   if (step === 0) {
     city = value;
     step = 1;
-
     setInputEnabled(false);
     isAnimating = true;
 
@@ -211,8 +208,13 @@ userInput.addEventListener("keydown", (event) => {
   }
 });
 
-runBtn.addEventListener("click", startProgram);
-resetBtn.addEventListener("click", showStartScreen);
+runBtn.addEventListener("click", () => {
+  startProgram();
+});
+
+resetBtn.addEventListener("click", () => {
+  showStartScreen();
+});
 
 soundBtn.addEventListener("click", async () => {
   soundOn = !soundOn;
