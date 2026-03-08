@@ -235,43 +235,7 @@ userInput.addEventListener("keydown", (event) => {
   }
 });
 
-resetBtn.addEventListener("click", () => {
-  showStartScreen();
-});
 
-soundBtn.addEventListener("click", async () => {
-  soundOn = !soundOn;
-
-  ensureAudio();
-
-  if (audioCtx && audioCtx.state === "suspended") {
-    try {
-      await audioCtx.resume();
-    } catch (error) {
-      console.error("Audio resume failed:", error);
-    }
-  }
-
-  soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
-
-  if (soundOn) {
-    beep({
-      frequency: 880,
-      duration: 0.05,
-      volume: 0.02,
-      type: "sine"
-    });
-
-    setTimeout(() => {
-      beep({
-        frequency: 1200,
-        duration: 0.05,
-        volume: 0.018,
-        type: "sine"
-      });
-    }, 70);
-  }
-});
 
 renderLineNumbers();
 showStartScreen();
