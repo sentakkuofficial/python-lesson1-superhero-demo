@@ -1,5 +1,6 @@
 const consoleEl = document.getElementById("console");
 const lineNumbersEl = document.getElementById("lineNumbers");
+const inputArea = document.getElementById("inputArea");
 const userInput = document.getElementById("userInput");
 const submitBtn = document.getElementById("submitBtn");
 const runBtn = document.getElementById("runBtn");
@@ -104,7 +105,12 @@ async function typeLine(text, className = "muted", prefix = "", speed = 18) {
   for (let i = 0; i < text.length; i++) {
     textSpan.textContent += text[i];
     if (text[i] !== " ") {
-      beep({ frequency: 1200 + Math.random() * 200, duration: 0.015, volume: 0.006, type: "square" });
+      beep({
+        frequency: 1200 + Math.random() * 200,
+        duration: 0.015,
+        volume: 0.006,
+        type: "square"
+      });
     }
     scrollConsole();
     await wait(speed);
@@ -117,7 +123,9 @@ async function typeLine(text, className = "muted", prefix = "", speed = 18) {
 function setInputEnabled(enabled) {
   userInput.disabled = !enabled;
   submitBtn.disabled = !enabled;
-  if (enabled) userInput.focus();
+  if (enabled) {
+    userInput.focus();
+  }
 }
 
 function showStartScreen() {
@@ -125,34 +133,32 @@ function showStartScreen() {
   step = -1;
   city = "";
   animal = "";
-  consoleEl.innerHTML = "";
 
-  addLine("Click [RUN] to run the final project you will build.", "brand");
+  consoleEl.innerHTML = "";
+  addLine("Click RUN to run the final project you will build.", "brand");
+
+  inputArea.style.display = "none";
   userInput.value = "";
   setInputEnabled(false);
 }
 
 async function startProgram() {
+  if (isAnimating) return;
+
   isAnimating = true;
   step = 0;
   city = "";
   animal = "";
+
   consoleEl.innerHTML = "";
+  inputArea.style.display = "block";
   setInputEnabled(false);
 
   await typeLine("Welcome to the Superhero Name Generator.", "brand", "", 18);
-  await typeLine("What city did you grow up in?", "question", "", 16);
+  await typeLine("What's the name of the city you grew up in?", "question", "", 16);
 
   isAnimating = false;
   setInputEnabled(true);
-}
-
-async function finishProgram() {
-  isAnimating = true;
-  setInputEnabled(false);
-  await wait(200);
-  await typeLine(`Your superhero name could be ${city} ${animal}`, "result", "", 20);
-  isAnimating = false;
 }
 
 function addUserLine(value) {
@@ -160,8 +166,19 @@ function addUserLine(value) {
   beep({ frequency: 700, duration: 0.04, volume: 0.02, type: "triangle" });
 }
 
+async function finishProgram() {
+  isAnimating = true;
+  setInputEnabled(false);
+
+  await wait(180);
+  await typeLine(`Your superhero name could be ${city} ${animal}`, "result", "", 20);
+
+  isAnimating = false;
+}
+
 async function handleInput() {
   const value = userInput.value.trim();
+
   if (!value || userInput.disabled || isAnimating) return;
 
   addUserLine(value);
@@ -170,10 +187,13 @@ async function handleInput() {
   if (step === 0) {
     city = value;
     step = 1;
+
     setInputEnabled(false);
     isAnimating = true;
+
     await wait(220);
-    await typeLine("What is your favorite animal?", "question", "", 16);
+    await typeLine("What's your favorite animal?", "question", "", 16);
+
     isAnimating = false;
     setInputEnabled(true);
   } else if (step === 1) {
@@ -194,25 +214,25 @@ userInput.addEventListener("keydown", (event) => {
 runBtn.addEventListener("click", startProgram);
 resetBtn.addEventListener("click", showStartScreen);
 
-if (soundBtn) {
-  soundBtn.addEventListener("click", async () => {
-    soundOn = !soundOn;
-    ensureAudio();
+soundBtn.addEventListener("click", async () => {
+  soundOn = !soundOn;
+  ensureAudio();
 
-    if (audioCtx && audioCtx.state === "suspended") {
-      try {
-        await audioCtx.resume();
-      } catch (e) {}
-    }
+  if (audioCtx && audioCtx.state === "suspended") {
+    try {
+      await audioCtx.resume();
+    } catch (e) {}
+  }
 
-    soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
+  soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
 
-    if (soundOn) {
-      beep({ frequency: 880, duration: 0.05, volume: 0.02, type: "sine" });
-      setTimeout(() => beep({ frequency: 1200, duration: 0.06, volume: 0.018, type: "sine" }), 70);
-    }
-  });
-}
+  if (soundOn) {
+    beep({ frequency: 880, duration: 0.05, volume: 0.02, type: "sine" });
+    setTimeout(() => {
+      beep({ frequency: 1200, duration: 0.06, volume: 0.018, type: "sine" });
+    }, 70);
+  }
+});
 
 renderLineNumbers();
 showStartScreen();
