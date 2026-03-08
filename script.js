@@ -3,8 +3,6 @@ const lineNumbersEl = document.getElementById("lineNumbers");
 const inputArea = document.getElementById("inputArea");
 const userInput = document.getElementById("userInput");
 const submitBtn = document.getElementById("submitBtn");
-const resetBtn = document.getElementById("resetBtn");
-const soundBtn = document.getElementById("soundBtn");
 
 let step = -1;
 let city = "";
