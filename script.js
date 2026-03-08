@@ -3,15 +3,10 @@ const lineNumbersEl = document.getElementById("lineNumbers");
 const inputArea = document.getElementById("inputArea");
 const userInput = document.getElementById("userInput");
 const submitBtn = document.getElementById("submitBtn");
-const runBtn = document.getElementById("runBtn");
-const resetBtn = document.getElementById("resetBtn");
-const soundBtn = document.getElementById("soundBtn");
 
 let step = -1;
 let city = "";
 let animal = "";
-let soundOn = false;
-let audioCtx = null;
 let isAnimating = false;
 
 function renderLineNumbers() {
@@ -21,41 +16,6 @@ function renderLineNumbers() {
     num.textContent = i;
     lineNumbersEl.appendChild(num);
   }
-}
-
-function ensureAudio() {
-  if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (AudioContextClass) {
-      audioCtx = new AudioContextClass();
-    }
-  }
-}
-
-function beep({ frequency = 880, duration = 0.03, volume = 0.015, type = "square" } = {}) {
-  if (!soundOn) return;
-  ensureAudio();
-  if (!audioCtx) return;
-
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-
-  oscillator.type = type;
-  oscillator.frequency.value = frequency;
-  gainNode.gain.value = volume;
-
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-
-  const now = audioCtx.currentTime;
-  oscillator.start(now);
-  gainNode.gain.setValueAtTime(volume, now);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-  oscillator.stop(now + duration);
-}
-
-function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function scrollConsole() {
@@ -82,6 +42,10 @@ function addLine(text = "", className = "muted", prefix = "") {
   return line;
 }
 
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function typeLine(text, className = "muted", prefix = "", speed = 18) {
   const line = document.createElement("div");
   line.className = `console-line ${className}`;
@@ -104,14 +68,6 @@ async function typeLine(text, className = "muted", prefix = "", speed = 18) {
 
   for (let i = 0; i < text.length; i++) {
     textSpan.textContent += text[i];
-    if (text[i] !== " ") {
-      beep({
-        frequency: 1200 + Math.random() * 200,
-        duration: 0.015,
-        volume: 0.006,
-        type: "square"
-      });
-    }
     scrollConsole();
     await wait(speed);
   }
@@ -127,7 +83,6 @@ function setInputEnabled(enabled) {
 }
 
 function showStartScreen() {
-
   step = -1;
   city = "";
   animal = "";
@@ -137,16 +92,18 @@ function showStartScreen() {
 
   const line = document.createElement("div");
   line.className = "console-line brand";
-
   line.innerHTML =
-    'Click <span id="runLink" class="run-link">RUN</span> to run the final project you will build.';
+    'Click <span class="run-link" id="runLink">RUN</span> to run the final project you will build.';
 
   consoleEl.appendChild(line);
+  scrollConsole();
 
   inputArea.style.display = "none";
+  setInputEnabled(false);
   userInput.value = "";
 
-  document.getElementById("runLink").addEventListener("click", startProgram);
+  const runLink = document.getElementById("runLink");
+  runLink.addEventListener("click", startProgram);
 }
 
 async function startProgram() {
@@ -162,8 +119,8 @@ async function startProgram() {
   setInputEnabled(false);
   userInput.value = "";
 
-  await typeLine("Welcome to the Superhero Name Generator.", "brand", "", 18);
-  await typeLine("What's the name of the city you grew up in?", "question", "", 16);
+  await typeLine("Welcome to the Superhero Name Generator.", "brand");
+  await typeLine("What's the name of the city you grew up in?", "question");
 
   isAnimating = false;
   setInputEnabled(true);
@@ -171,7 +128,6 @@ async function startProgram() {
 
 function addUserLine(value) {
   addLine(value, "input", "•");
-  beep({ frequency: 700, duration: 0.04, volume: 0.02, type: "triangle" });
 }
 
 async function finishProgram() {
@@ -179,7 +135,7 @@ async function finishProgram() {
   setInputEnabled(false);
 
   await wait(180);
-  await typeLine(`Your superhero name could be ${city} ${animal}`, "result", "", 20);
+  await typeLine(`Your superhero name could be ${city} ${animal}`, "result");
 
   isAnimating = false;
 }
@@ -194,11 +150,12 @@ async function handleInput() {
   if (step === 0) {
     city = value;
     step = 1;
+
     setInputEnabled(false);
     isAnimating = true;
 
     await wait(220);
-    await typeLine("What's your favorite animal?", "question", "", 16);
+    await typeLine("What's your favorite animal?", "question");
 
     isAnimating = false;
     setInputEnabled(true);
@@ -214,34 +171,6 @@ submitBtn.addEventListener("click", handleInput);
 userInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     handleInput();
-  }
-});
-
-runBtn.addEventListener("click", () => {
-  startProgram();
-});
-
-resetBtn.addEventListener("click", () => {
-  showStartScreen();
-});
-
-soundBtn.addEventListener("click", async () => {
-  soundOn = !soundOn;
-  ensureAudio();
-
-  if (audioCtx && audioCtx.state === "suspended") {
-    try {
-      await audioCtx.resume();
-    } catch (e) {}
-  }
-
-  soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
-
-  if (soundOn) {
-    beep({ frequency: 880, duration: 0.05, volume: 0.02, type: "sine" });
-    setTimeout(() => {
-      beep({ frequency: 1200, duration: 0.06, volume: 0.018, type: "sine" });
-    }, 70);
   }
 });
 
