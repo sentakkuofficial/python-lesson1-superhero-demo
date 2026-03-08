@@ -6,7 +6,7 @@ const runBtn = document.getElementById("runBtn");
 const resetBtn = document.getElementById("resetBtn");
 const soundBtn = document.getElementById("soundBtn");
 
-let step = 0;
+let step = -1;
 let city = "";
 let animal = "";
 let soundOn = false;
@@ -120,35 +120,38 @@ function setInputEnabled(enabled) {
   if (enabled) userInput.focus();
 }
 
-async function bootSequence() {
-  isAnimating = true;
-  setInputEnabled(false);
+function showStartScreen() {
+  isAnimating = false;
+  step = -1;
+  city = "";
+  animal = "";
   consoleEl.innerHTML = "";
 
-  await typeLine("WAYNE SYSTEMS // SECURE EDUCATION TERMINAL", "brand", "", 16);
-  await typeLine("Initializing interactive demo environment...", "boot", "", 14);
-  await typeLine("Loading lesson preview package...", "boot", "", 14);
-  await typeLine("Authenticating student access...", "boot", "", 14);
-  await typeLine("Mounting main.py", "boot", "", 14);
-  await typeLine("Environment ready.", "result", "", 16);
-  addLine("", "muted");
-  await typeLine("Welcome to the Superhero Name Generator.", "brand", "", 18);
-  await typeLine("What city did you grow up in?", "question", "", 16);
+  addLine("Click [RUN] to run the final project you will build.", "brand");
+  userInput.value = "";
+  setInputEnabled(false);
+}
 
+async function startProgram() {
+  isAnimating = true;
   step = 0;
   city = "";
   animal = "";
-  userInput.value = "";
-  setInputEnabled(true);
+  consoleEl.innerHTML = "";
+  setInputEnabled(false);
+
+  await typeLine("Welcome to the Superhero Name Generator.", "brand", "", 18);
+  await typeLine("What city did you grow up in?", "question", "", 16);
+
   isAnimating = false;
+  setInputEnabled(true);
 }
 
 async function finishProgram() {
   isAnimating = true;
   setInputEnabled(false);
-  addLine("", "muted");
+  await wait(200);
   await typeLine(`Your superhero name could be ${city} ${animal}`, "result", "", 20);
-  await typeLine("Program complete. Press Reset to run again.", "muted", "", 14);
   isAnimating = false;
 }
 
@@ -188,26 +191,28 @@ userInput.addEventListener("keydown", (event) => {
   }
 });
 
-runBtn.addEventListener("click", bootSequence);
-resetBtn.addEventListener("click", bootSequence);
+runBtn.addEventListener("click", startProgram);
+resetBtn.addEventListener("click", showStartScreen);
 
-soundBtn.addEventListener("click", async () => {
-  soundOn = !soundOn;
-  ensureAudio();
+if (soundBtn) {
+  soundBtn.addEventListener("click", async () => {
+    soundOn = !soundOn;
+    ensureAudio();
 
-  if (audioCtx && audioCtx.state === "suspended") {
-    try {
-      await audioCtx.resume();
-    } catch (e) {}
-  }
+    if (audioCtx && audioCtx.state === "suspended") {
+      try {
+        await audioCtx.resume();
+      } catch (e) {}
+    }
 
-  soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
+    soundBtn.textContent = soundOn ? "Sound: On" : "Sound: Off";
 
-  if (soundOn) {
-    beep({ frequency: 880, duration: 0.05, volume: 0.02, type: "sine" });
-    setTimeout(() => beep({ frequency: 1200, duration: 0.06, volume: 0.018, type: "sine" }), 70);
-  }
-});
+    if (soundOn) {
+      beep({ frequency: 880, duration: 0.05, volume: 0.02, type: "sine" });
+      setTimeout(() => beep({ frequency: 1200, duration: 0.06, volume: 0.018, type: "sine" }), 70);
+    }
+  });
+}
 
 renderLineNumbers();
-bootSequence();
+showStartScreen();
