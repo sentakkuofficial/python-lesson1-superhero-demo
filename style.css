@@ -10,13 +10,11 @@
   --gold-glow: rgba(212, 175, 55, 0.14);
 
   --blue: #6ee7ff;
-  --blue-soft: rgba(110, 231, 255, 0.12);
   --green: #4ade80;
   --white: #f5f5f5;
   --muted: #8a8a8a;
 
   --border: rgba(255, 255, 255, 0.07);
-  --border-strong: rgba(212, 175, 55, 0.2);
 
   --shadow-lg:
     0 0 0 1px rgba(255,255,255,0.03),
@@ -221,10 +219,6 @@ body {
   gap: 10px;
 }
 
-.console-line.system {
-  color: #7d7d7d;
-}
-
 .console-line.brand {
   color: var(--gold);
   text-shadow: 0 0 14px rgba(212,175,55,0.12);
@@ -247,10 +241,6 @@ body {
 
 .console-line.muted {
   color: var(--muted);
-}
-
-.console-line.boot {
-  color: #cfcfcf;
 }
 
 .console-prefix {
