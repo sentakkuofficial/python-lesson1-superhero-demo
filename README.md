@@ -16,3 +16,6 @@ Then it combines them to generate a superhero name.
 
 Example:
 Tokyo + Falcon = Tokyo Falcon
+
+
+Try it yourself here: https://github.com/sentakkuofficial/python-lesson1-superhero-demo
